@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BoostLink Global - Le Réseau Premium</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                BoostLink <span class="fw-light">Global</span>
+            </div>
+            <div class="nav-links">
+                <span class="secure-badge">🔒 Connexion Sécurisée</span>
+                <button id="addAdBtn" class="btn-premium">Lancer une campagne</button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container hero-content">
+            <div class="hero-badge">Plateforme certifiée de monétisation d'audience</div>
+            <h1>Propulsez votre business à l'échelle <span class="highlight">internationale</span></h1>
+            <p>Rejoignez le réseau le plus exclusif pour promouvoir vos groupes, canaux et services digitaux. Une visibilité maximale, conçue pour les leaders.</p>
+            <div class="hero-stats">
+                <div class="stat"><strong>+50 000</strong> Visiteurs/mois</div>
+                <div class="stat"><strong>100%</strong> Autonome</div>
+                <div class="stat"><strong>24/7</strong> Support IA</div>
+            </div>
+        </div>
+    </header>
+
+    <section class="trust-section container">
+        <p class="trust-text">Les leaders du digital en Afrique nous font confiance</p>
+        <div class="trust-logos">
+            <div class="logo-placeholder">🌐 E-Commerce Pro</div>
+            <div class="logo-placeholder">📈 Trading Académie</div>
+            <div class="logo-placeholder">🚀 Startup Africa</div>
+        </div>
+    </section>
+
+    <main class="container">
+        <div class="section-header">
+            <h2>Services & Opportunités <span class="highlight">Premium</span></h2>
+            <p>Découvrez les meilleurs canaux validés par notre communauté.</p>
+        </div>
+        
+        <div class="ads-grid" id="adsGrid">
+            <!-- Injecté par le JS -->
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3>BoostLink Global</h3>
+                <p>L'excellence de la visibilité numérique.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Confidentialité</a>
+                <a href="#">Conditions générales</a>
+                <a href="#">Politique de Sécurité</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 BoostLink International. Plateforme de mise en relation sécurisée.
+        </div>
+    </footer>
+
+    <!-- Modal Formulaire -->
+    <div id="adModal" class="modal">
+        <div class="modal-content premium-modal">
+            <span class="close">&times;</span>
+            <h2>Configuration de la campagne</h2>
+            <p class="modal-subtitle">Paramétrez votre visibilité en 2 minutes</p>
+            <form id="adForm">
+                <div class="input-group">
+                    <label>Titre du service</label>
+                    <input type="text" id="adTitle" placeholder="Ex: Canal Telegram - Signaux VIP" required>
+                </div>
+                <div class="input-group">
+                    <label>Description percutante</label>
+                    <textarea id="adDesc" placeholder="Décrivez la valeur unique de votre service..." required></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Lien d'accès sécurisé (URL)</label>
+                    <input type="url" id="adLink" placeholder="https://..." required>
+                </div>
+                
+                <div class="payment-section">
+                    <label class="radio-card">
+                        <input type="radio" name="visibility" value="free" checked>
+                        <div class="card-content">
+                            <h4>Plan Standard</h4>
+                            <p>Apparition dans la liste globale</p>
+                            <span class="price">Gratuit</span>
+                        </div>
+                    </label>
+                    <label class="radio-card vip-card">
+                        <input type="radio" name="visibility" value="vip">
+                        <div class="card-content">
+                            <div class="vip-tag">Recommandé</div>
+                            <h4>Plan Privilège</h4>
+                            <p>Top position & Badge de confiance</p>
+                            <span class="price">1000 FCFA</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div id="paymentButtons" class="hidden">
+                    <p class="secure-text">🔒 Choisissez un processeur de paiement sécurisé</p>
+                    <div class="mobile-money-logos">
+                        <button type="button" class="pay-btn orange" onclick="simulatePayment('Orange Money')">Payer via Orange Money</button>
+                        <button type="button" class="pay-btn wave" onclick="simulatePayment('Wave')">Payer via Wave</button>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-premium w-100 mt-2">Valider la campagne (Gratuit)</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Assistant IA (Chatbot Modal) -->
+    <div id="aiModal" class="modal">
+        <div class="modal-content ai-chat">
+            <span class="close-ai">&times;</span>
+            <div class="chat-header">
+                <div class="ai-avatar">🛡️</div>
+                <div class="chat-title-box">
+                    <h3>Serveur Sécurisé</h3>
+                    <span class="online-status">● Chiffrement de bout en bout activé</span>
+                </div>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="message ai-message">
+                    Bonjour ! 👋 Je suis l'assistant de sécurité.
+                </div>
+                <div class="message ai-message">
+                    Pour activer votre campagne Premium, veuillez envoyer <strong>1000 FCFA</strong> (par Orange Money ou Wave) au numéro sécurisé suivant :<br><br>
+                    <strong>📞 +226 57 82 82 28</strong>
+                </div>
+                <div class="message ai-message">
+                    Une fois l'envoi effectué, saisissez simplement votre <strong>Numéro de Transaction (ID)</strong> ci-dessous pour que je valide votre annonce.
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="txIdInput" placeholder="Saisissez l'ID de transaction...">
+                <button id="verifyTxBtn" class="btn-verify">Vérifier l'ID</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
