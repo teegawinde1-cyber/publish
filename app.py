@@ -1,16 +1,20 @@
-from flask import Flask, request, jsonify, send_from_directory, send_file
+from flask import Flask, request, jsonify, send_file
 import sqlite3
 import os
 from datetime import datetime
+import traceback
 
-# Configuration absolue pour Render
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
+app = Flask(__name__)
 
-app = Flask(__name__, static_folder=STATIC_DIR)
+# --- 1. AFFICHER LES ERREURS CLAIREMENT ---
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Si le site plante, ça affichera l'erreur exacte sur votre écran !
+    return f"<h3>Oups ! Une erreur est survenue :</h3><pre>{traceback.format_exc()}</pre>", 500
 
+# --- 2. BASE DE DONNÉES ---
 def init_db():
-    # Créer la DB dans un endroit où Render a les droits d'écriture
     conn = sqlite3.connect(os.path.join(BASE_DIR, 'database.db'))
     c = conn.cursor()
     c.execute('''
@@ -30,14 +34,27 @@ def init_db():
 
 init_db()
 
+# --- 3. RECHERCHE INTELLIGENTE DES FICHIERS ---
+def get_file_anywhere(filename):
+    # Cherche d'abord dans un éventuel dossier "static"
+    path1 = os.path.join(BASE_DIR, 'static', filename)
+    if os.path.exists(path1): return send_file(path1)
+    
+    # Cherche ensuite à la racine (si GitHub a cassé le dossier)
+    path2 = os.path.join(BASE_DIR, filename)
+    if os.path.exists(path2): return send_file(path2)
+    
+    return f"Erreur : Impossible de trouver le fichier '{filename}'.", 404
+
 @app.route('/')
 def index():
-    return send_file(os.path.join(STATIC_DIR, 'index.html'))
+    return get_file_anywhere('index.html')
 
 @app.route('/<path:path>')
 def serve_static(path):
-    return send_from_directory(STATIC_DIR, path)
+    return get_file_anywhere(path)
 
+# --- 4. GESTION DES ANNONCES ---
 @app.route('/api/ads', methods=['GET'])
 def get_ads():
     conn = sqlite3.connect(os.path.join(BASE_DIR, 'database.db'))
@@ -57,7 +74,6 @@ def create_ad():
     transaction_id = data.get('transaction_id', '')
 
     status = 'pending' if is_vip else 'active'
-    
     if is_vip and transaction_id: 
         status = 'active'
 
@@ -75,11 +91,9 @@ def create_ad():
 def verify_transaction():
     data = request.json
     tx_id = data.get('transaction_id', '').upper()
-    
     if len(tx_id) > 4 and tx_id != "0000":
         return jsonify({'valid': True, 'message': 'Paiement détecté avec succès !'})
-    else:
-        return jsonify({'valid': False, 'message': 'Je ne trouve pas ce paiement. Veuillez vérifier l\'ID.'})
+    return jsonify({'valid': False, 'message': 'Je ne trouve pas ce paiement. Veuillez vérifier l\'ID.'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))
